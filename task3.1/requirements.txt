@@ -1,8 +1,0 @@
-flask
-flask_sqlalchemy
-joblib
-scikit-learn
-pandas
-numpy
-matplotlib
-werkzeug
