@@ -1,5 +1,0 @@
-services:
-  - type: web
-    name: diabetes-prediction
-    runtime: python
-    startCommand: "gunicorn app:app"
