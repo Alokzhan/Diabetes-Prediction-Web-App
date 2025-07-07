@@ -2,4 +2,6 @@ services:
   - type: web
     name: diabetes-prediction
     runtime: python
+    buildCommand: "pip install -r task3.1/requirements.txt"
     startCommand: "gunicorn app:app"
+    workingDir: task3.1
