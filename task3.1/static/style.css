@@ -1,0 +1,98 @@
+/* GLOBAL STYLES */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f0f6ff;
+    margin: 0;
+    padding: 0;
+    color: #333;
+    text-align: center;
+}
+
+h2, h3 {
+    color: #004a99;
+    margin-bottom: 20px;
+}
+
+/* FORM CONTAINER */
+form {
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    display: inline-block;
+    padding: 40px 30px;
+    margin-top: 40px;
+    max-width: 400px;
+    width: 90%;
+}
+
+/* INPUT FIELDS */
+input[type="text"],
+input[type="password"],
+input[type="number"] {
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    font-size: 16px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    transition: 0.2s ease;
+}
+
+input:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0,123,255,0.3);
+}
+
+/* BUTTONS */
+button, input[type="submit"] {
+    background-color: #007bff;
+    color: white;
+    padding: 12px 25px;
+    font-size: 16px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background 0.3s ease;
+}
+
+button:hover, input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+/* LINKS */
+a {
+    color: #007bff;
+    text-decoration: none;
+    margin: 10px;
+    display: inline-block;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* DASHBOARD CHART */
+img {
+    margin-top: 30px;
+    border-radius: 12px;
+    box-shadow: 0 0 12px rgba(0,0,0,0.08);
+    max-width: 90%;
+}
+
+/* RESPONSIVE DESIGN */
+@media (max-width: 600px) {
+    form {
+        width: 95%;
+        padding: 20px;
+    }
+
+    input, button {
+        font-size: 15px;
+    }
+
+    img {
+        width: 100%;
+    }
+}
