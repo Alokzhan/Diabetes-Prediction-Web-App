@@ -10,24 +10,25 @@ import matplotlib.pyplot as plt
 app = Flask(__name__)
 app.secret_key = os.environ.get('SECRET_KEY') or 'dev-secret-key'
 
-# Configure SQLite database
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///database.db')
+# Configure SQLite database with absolute path
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
+    'DATABASE_URL',
+    'sqlite:///' + os.path.join(app.root_path, 'database.db')
+)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 # Ensure static directory exists
-os.makedirs('static', exist_ok=True)
+os.makedirs(os.path.join(app.root_path, 'static'), exist_ok=True)
 
-# Load model
-model = joblib.load("model.pkl")
-
+# Load model safely
+model = joblib.load(os.path.join(os.path.dirname(__file__), "model.pkl"))
 
 # Database Models
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
-
 
 class Prediction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -36,11 +37,9 @@ class Prediction(db.Model):
     result = db.Column(db.String(50))
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
-
 # Create tables
 with app.app_context():
     db.create_all()
-
 
 # Routes
 @app.route('/')
@@ -49,11 +48,9 @@ def home():
         return redirect(url_for('login'))
     return render_template("index.html")
 
-
 @app.route('/static/<path:filename>')
 def static_files(filename):
     return send_from_directory('static', filename)
-
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -77,7 +74,6 @@ def predict():
     except Exception as e:
         return render_template("index.html", prediction=f"Error: {str(e)}")
 
-
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -94,7 +90,6 @@ def register():
         return redirect(url_for('login'))
     return render_template("register.html")
 
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -107,7 +102,6 @@ def login():
             return redirect(url_for('home'))
         return render_template("login.html", error="Invalid credentials")
     return render_template("login.html")
-
 
 @app.route('/dashboard')
 def dashboard():
@@ -127,7 +121,7 @@ def dashboard():
         colors=['#FF5733', '#2ECC71']
     )
     plt.title("Prediction Summary")
-    chart_path = os.path.join('static', 'chart.png')
+    chart_path = os.path.join(app.root_path, 'static', 'chart.png')
     plt.savefig(chart_path)
     plt.close()
 
@@ -137,14 +131,11 @@ def dashboard():
         nondiabetic=nondiabetic
     )
 
-
 @app.route('/logout')
 def logout():
     session.pop('user_id', None)
     return redirect(url_for('login'))
 
-
-# Do NOT use app.run() if using Gunicorn (Render will call gunicorn)
-# Just keep this reference for dev:
+# Only for local testing, not used in production
 if __name__ == "__main__":
     app.run(debug=True)
