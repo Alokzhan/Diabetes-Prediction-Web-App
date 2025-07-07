@@ -8,7 +8,7 @@ from datetime import datetime
 import matplotlib.pyplot as plt
 
 app = Flask(__name__)
-app.secret_key = os.environ.get('SECRET_KEY') or 'dev-secret-key'  # Will use environment variable in production
+app.secret_key = os.environ.get('SECRET_KEY') or 'dev-secret-key'
 
 # Configure SQLite database
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///database.db')
@@ -18,7 +18,7 @@ db = SQLAlchemy(app)
 # Ensure static directory exists
 os.makedirs('static', exist_ok=True)
 
-# Load model (assumes model.pkl is in the root directory)
+# Load model
 model = joblib.load("model.pkl")
 
 
@@ -37,7 +37,7 @@ class Prediction(db.Model):
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
 
-# Create tables (only needed once)
+# Create tables
 with app.app_context():
     db.create_all()
 
@@ -144,6 +144,7 @@ def logout():
     return redirect(url_for('login'))
 
 
+# Do NOT use app.run() if using Gunicorn (Render will call gunicorn)
+# Just keep this reference for dev:
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port)
+    app.run(debug=True)
